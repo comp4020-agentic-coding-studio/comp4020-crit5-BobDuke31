@@ -87,15 +87,35 @@ function distance(a: Point, b: Point): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+// How finely to sample the bead's edge when checking it against the track.
+// The track is a union of per-segment "capsules", and near a concave corner
+// a point can be covered by a segment other than whichever one is nearest to
+// the bead's centre — so shrinking the single nearest-segment distance by
+// the bead's radius (checking only the centre) is too strict there: it can
+// flag a bead as off-track while every point of it is still visibly painted.
+// Sampling the actual circle catches that extra coverage the same way the
+// browser's own rendering does.
+const BEAD_EDGE_SAMPLES = 32;
+
 /** True only if the whole bead — not just its center — stays inside the
- *  track: the centerline distance has to leave room for the bead's radius. */
+ *  painted track, including the joined area at corners. */
 export function isWithinPath(
   point: Point,
   path: Point[],
   width: number,
   beadRadius: number = BEAD_RADIUS,
 ): boolean {
-  return distanceToPath(point, path) <= width / 2 - beadRadius;
+  const halfWidth = width / 2;
+  if (distanceToPath(point, path) > halfWidth) return false;
+  for (let i = 0; i < BEAD_EDGE_SAMPLES; i++) {
+    const theta = (2 * Math.PI * i) / BEAD_EDGE_SAMPLES;
+    const edge = {
+      x: point.x + beadRadius * Math.cos(theta),
+      y: point.y + beadRadius * Math.sin(theta),
+    };
+    if (distanceToPath(edge, path) > halfWidth) return false;
+  }
+  return true;
 }
 
 export function isAtStart(point: Point, start: Point, radius: number = CAPTURE_RADIUS): boolean {

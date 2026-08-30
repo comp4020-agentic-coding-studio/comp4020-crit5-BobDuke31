@@ -38,7 +38,7 @@ describe("Steady Hand: the one rule", () => {
     expect(nextState("lost", end, level)).toBe("lost");
   });
 
-  it("the whole bead, not just its centre, must stay inside the track", () => {
+  it("on a straight stretch, the whole bead — not just its centre — must stay inside the track", () => {
     // Just past the centerline, still inside the track's half-width, but not
     // with room for the bead's own radius — this used to pass as "on the
     // path" when only the centre point was checked.
@@ -46,6 +46,23 @@ describe("Steady Hand: the one rule", () => {
     const grazing = { x: level.path[2].x, y: level.path[2].y + (halfWidth - BEAD_RADIUS / 2) };
     expect(isWithinPath(grazing, level.path, level.width)).toBe(false);
     expect(nextState("running", grazing, level)).toBe("lost");
+  });
+
+  it("at a sharp corner, the bead can be covered by the joined area even when it's beyond one segment's own tolerance alone", () => {
+    // Level 3's path bends sharply at (28, 52). A point 5 units up from that
+    // vertex, along the corner's bisector, is farther from either adjacent
+    // segment individually than that segment's own eroded tolerance allows —
+    // but the two segments' painted areas overlap there, and a real bead
+    // centred at this point is still entirely inside the rendered track
+    // (confirmed against the browser's own SVGGeometryElement.isPointInStroke
+    // for this exact point). A naive "distance to nearest segment, minus the
+    // bead's radius" check wrongly calls this a loss.
+    const level3 = LEVELS[2];
+    const vertex = level3.path[2];
+    expect(vertex).toEqual({ x: 28, y: 52 });
+    const nearVertex = { x: vertex.x, y: vertex.y - 5 };
+    expect(isWithinPath(nearVertex, level3.path, level3.width)).toBe(true);
+    expect(nextState("running", nearVertex, level3)).toBe("running");
   });
 
   it("later levels narrow the effective tolerance, so difficulty actually increases", () => {
