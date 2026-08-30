@@ -9,13 +9,22 @@ The
 publishes this deliverable's brief and spec, and this repo's name tells you
 which deliverable applies. Read both before you plan or build.
 
+## How to work in here
+
+- Keep the dev server running (`pnpm dev`) so you see changes as you make them.
+- Run `pnpm check` before you push.
+- Open the page in a browser and look at it. The rendered page is the truth;
+  your mental model of it isn't.
+- When a check fails, read its output before you change anything.
+- Never commit a red state.
+
 ## The link-preview card
 
-`public/card.png` (1200x630) is the image a shared link shows; `index.html`'s
-head points at it. Replace it and the `description` meta, and copy the head
-block into any new page. The card URL resolves against the page that names it,
-like any link --- `./card.png` is wrong one directory down, and nothing in CI
-checks it, so the deployed head is the only place a broken one shows up.
+`public/card.png` (1200x630) is the image a shared link shows; `src/pages/index.astro`'s
+head points at it. Replace the image and update the `description` meta on
+every page. The card URL resolves against the page that names it, like any
+link --- `./card.png` is wrong one directory down, and nothing in CI checks
+it, so look at the deployed head when you add pages.
 
 ## The checks
 
