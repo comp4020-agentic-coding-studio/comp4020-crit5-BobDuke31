@@ -6,6 +6,7 @@ const bead = document.querySelector<SVGCircleElement>("#bead")!;
 const endDot = document.querySelector<SVGCircleElement>("#end-dot")!;
 const status = document.querySelector<HTMLParagraphElement>("#status")!;
 const levelLabel = document.querySelector<HTMLSpanElement>("#level-label")!;
+const hud = document.querySelector<HTMLDivElement>("#hud")!;
 const timerLabel = document.querySelector<HTMLSpanElement>("#timer")!;
 
 bead.setAttribute("r", String(BEAD_RADIUS));
@@ -35,6 +36,7 @@ function drawLevel(): void {
   endDot.setAttribute("cy", String(end.y));
   setBead(level.path[0]);
   levelLabel.textContent = `Level ${levelIndex + 1} of ${LEVELS.length}`;
+  hud.dataset.level = String(levelIndex);
 }
 
 function toBoardPoint(clientX: number, clientY: number): Point {

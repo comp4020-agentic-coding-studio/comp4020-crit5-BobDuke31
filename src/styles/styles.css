@@ -1,9 +1,99 @@
+:root {
+  --ink: #e6ebf5;
+  --ink-dim: #93a0bb;
+  --ink-faint: #5c6785;
+  --accent-cyan: #38bdf8;
+  --accent-indigo: #818cf8;
+  --accent-violet: #c084fc;
+  --success: #34d399;
+  --danger: #f87171;
+  --panel: #0f1428;
+  --panel-edge: rgba(148, 163, 184, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  padding: 2rem;
-  font-family: system-ui, sans-serif;
+  padding: 2.5rem 1.25rem 4rem;
+  min-height: 100vh;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   line-height: 1.6;
-  color: #1a1a1a;
+  color: var(--ink);
+  background: #05070f;
+  position: relative;
+  isolation: isolate;
+  overflow-x: hidden;
+}
+
+/* Layered ambient backdrop: soft glows + a faint grid, all fixed so the page
+   reads as one lit room rather than a flat sheet of colour. */
+.bg-fx {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(38rem 26rem at 12% -6%, rgba(56, 189, 248, 0.16), transparent 60%),
+    radial-gradient(34rem 30rem at 108% 12%, rgba(192, 132, 252, 0.14), transparent 60%),
+    radial-gradient(46rem 40rem at 50% 118%, rgba(129, 140, 248, 0.12), transparent 60%),
+    linear-gradient(180deg, #070a16 0%, #05060f 55%, #030408 100%);
+}
+
+.bg-fx::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
+  mask-image: radial-gradient(60% 60% at 50% 30%, black, transparent 85%);
+}
+
+header {
+  max-width: 40rem;
+  margin: 0 auto 1.5rem;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 0.4rem 0.9rem 0.4rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--panel-edge);
+  background: rgba(255, 255, 255, 0.03);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.brand:hover {
+  border-color: rgba(129, 140, 248, 0.5);
+  background: rgba(129, 140, 248, 0.08);
+}
+
+.brand-mark {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+  box-shadow: 0 0 0.9rem rgba(129, 140, 248, 0.55);
 }
 
 main {
@@ -12,39 +102,224 @@ main {
 }
 
 a {
-  color: #0b5fff;
+  color: var(--accent-cyan);
+}
+
+.game-shell {
+  position: relative;
+  padding: 2rem 2rem 1.75rem;
+  border-radius: 1.75rem;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 40%),
+    var(--panel);
+  border: 1px solid var(--panel-edge);
+  box-shadow:
+    0 1.5rem 3.5rem -1.5rem rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(0, 0, 0, 0.3) inset,
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+.game-shell::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), var(--accent-violet), transparent);
+  opacity: 0.8;
+}
+
+h1 {
+  margin: 0.25rem 0 0.35rem;
+  font-size: clamp(1.9rem, 1.6rem + 1.4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  background: linear-gradient(120deg, #f8fafc, var(--accent-cyan) 55%, var(--accent-violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 2.5rem rgba(129, 140, 248, 0.25);
+}
+
+.tagline {
+  margin: 0 0 1.5rem;
+  color: var(--ink-dim);
+  font-size: 0.95rem;
+  max-width: 34rem;
 }
 
 #hud {
   display: flex;
-  justify-content: space-between;
-  font-variant-numeric: tabular-nums;
-  font-weight: 600;
-  color: #475569;
-  margin-bottom: 0.5rem;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
 }
+
+.hud-chip {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  padding: 0.55rem 1rem;
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--panel-edge);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+}
+
+.hud-chip--level {
+  flex: 1 1 auto;
+}
+
+.hud-chip-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+#level-label,
+#timer {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 1rem;
+}
+
+.level-dots {
+  display: inline-flex;
+  gap: 0.3rem;
+  margin-left: 0.35rem;
+}
+
+.level-dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.25);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#hud[data-level="0"] .level-dot:nth-child(1),
+#hud[data-level="1"] .level-dot:nth-child(1),
+#hud[data-level="1"] .level-dot:nth-child(2),
+#hud[data-level="2"] .level-dot:nth-child(1),
+#hud[data-level="2"] .level-dot:nth-child(2),
+#hud[data-level="2"] .level-dot:nth-child(3) {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+  box-shadow: 0 0 0.5rem rgba(129, 140, 248, 0.7);
+}
+
+.board-frame {
+  position: relative;
+  padding: 0.6rem;
+  border-radius: 1.15rem;
+  background: linear-gradient(160deg, #1c2440, #0a0e1c);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0.75rem 2rem -1rem rgba(0, 0, 0, 0.8);
+  transition: box-shadow 0.25s ease;
+}
+
+.game-shell:has(#board[data-state="running"]) .board-frame {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0.75rem 2rem -1rem rgba(0, 0, 0, 0.8),
+    0 0 0 3px rgba(56, 189, 248, 0.25),
+    0 0 2.5rem rgba(56, 189, 248, 0.25);
+}
+
+.game-shell:has(#board[data-state="lost"]) .board-frame {
+  animation: shake 0.32s ease;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0.75rem 2rem -1rem rgba(0, 0, 0, 0.8),
+    0 0 0 3px rgba(248, 113, 113, 0.35);
+}
+
+.game-shell:has(#board[data-state="won"]) .board-frame {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0.75rem 2rem -1rem rgba(0, 0, 0, 0.8),
+    0 0 0 3px rgba(52, 211, 153, 0.35),
+    0 0 2.5rem rgba(52, 211, 153, 0.25);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-0.35rem); }
+  40% { transform: translateX(0.3rem); }
+  60% { transform: translateX(-0.2rem); }
+  80% { transform: translateX(0.15rem); }
+}
+
+.bolt {
+  position: absolute;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #cbd5e1, #475569 70%, #1e293b);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.bolt--tl { top: 0.4rem; left: 0.4rem; }
+.bolt--tr { top: 0.4rem; right: 0.4rem; }
+.bolt--bl { bottom: 0.4rem; left: 0.4rem; }
+.bolt--br { bottom: 0.4rem; right: 0.4rem; }
 
 #board {
   display: block;
   width: 100%;
-  height: 60vh;
-  background: #f8fafc;
+  aspect-ratio: 5 / 3;
   border-radius: 0.75rem;
   touch-action: none;
   cursor: crosshair;
+  overflow: hidden;
+}
+
+.board-bg {
+  filter: none;
+}
+
+.board-grid {
+  pointer-events: none;
 }
 
 #track {
-  stroke: #94a3b8;
+  stroke: url(#trackGradient);
+  stroke-width: 14;
   stroke-linecap: round;
   stroke-linejoin: round;
+  filter: drop-shadow(0 0.1rem 0.15rem rgba(0, 0, 0, 0.45));
+}
+
+.track-glow {
+  fill: none;
+  stroke: #a78bfa;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.5;
+  filter: blur(2.6px);
+  pointer-events: none;
 }
 
 #bead {
-  fill: #0b5fff;
+  fill: url(#beadGradient);
   cursor: grab;
-  filter: drop-shadow(0 0.15rem 0.2rem rgb(11 95 255 / 0.35));
+  filter:
+    drop-shadow(0 0.15rem 0.2rem rgb(2 6 23 / 0.6))
+    drop-shadow(0 0 0.35rem rgba(56, 189, 248, 0.85))
+    drop-shadow(0 0 0.9rem rgba(56, 189, 248, 0.45));
   animation: pulse 1.4s ease-in-out infinite;
+}
+
+.bead-glow {
+  fill: #38bdf8;
+  opacity: 0.4;
+  filter: blur(4px);
+  pointer-events: none;
 }
 
 #board[data-state="running"] #bead {
@@ -54,7 +329,11 @@ a {
 
 #board[data-state="won"] #bead {
   fill: #1f9d55;
-  animation: none;
+}
+
+#board[data-state="won"] .bead-glow {
+  fill: var(--success);
+  opacity: 0.55;
 }
 
 #board[data-state="lost"] #bead {
@@ -62,12 +341,48 @@ a {
   animation: none;
 }
 
+#board[data-state="lost"] .bead-glow {
+  fill: var(--danger);
+  opacity: 0.55;
+}
+
 #end-dot {
-  fill: #64748b;
+  fill: #fbbf24;
+  filter: drop-shadow(0 0 0.3rem rgba(251, 191, 36, 0.75));
+}
+
+.end-ring {
+  fill: none;
+  stroke: #fbbf24;
+  stroke-width: 0.6;
+  transform-box: fill-box;
+  transform-origin: center;
+  pointer-events: none;
+  animation: radar 2.2s ease-out infinite;
+}
+
+.end-ring--inner {
+  animation-delay: 1.1s;
+}
+
+@keyframes radar {
+  0% {
+    transform: scale(1);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
 }
 
 #board[data-state="won"] #end-dot {
-  fill: #1f9d55;
+  fill: var(--success);
+  filter: drop-shadow(0 0 0.4rem rgba(52, 211, 153, 0.85));
+}
+
+#board[data-state="won"] .end-ring {
+  stroke: var(--success);
 }
 
 @keyframes pulse {
@@ -82,14 +397,54 @@ a {
   }
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
+#status {
+  margin: 1.1rem auto 0;
+  max-width: 24rem;
+  text-align: center;
+  font-weight: 700;
+  padding: 0.55rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--panel-edge);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: translateY(0);
+}
+
+#status:empty {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.25rem);
+  padding-block: 0;
   border: 0;
+  margin-top: 0;
+}
+
+.game-shell:has(#board[data-state="won"]) #status {
+  border-color: rgba(52, 211, 153, 0.4);
+  background: rgba(52, 211, 153, 0.1);
+  color: var(--success);
+}
+
+.game-shell:has(#board[data-state="lost"]) #status {
+  border-color: rgba(248, 113, 113, 0.4);
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--danger);
+}
+
+.hint {
+  margin: 0.85rem 0 0;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #bead,
+  .end-ring,
+  .board-frame {
+    animation: none !important;
+  }
 }
