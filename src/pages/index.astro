@@ -38,7 +38,6 @@ import "../styles/styles.css";
     <main>
       <div class="game-shell">
         <h1>Steady Hand</h1>
-        <p class="tagline">Trace the wire from the glowing start to the end &mdash; touch the edge and it's over.</p>
 
         <div id="hud">
           <div class="hud-chip hud-chip--level">
@@ -57,11 +56,6 @@ import "../styles/styles.css";
         </div>
 
         <div class="board-frame">
-          <span class="bolt bolt--tl" aria-hidden="true"></span>
-          <span class="bolt bolt--tr" aria-hidden="true"></span>
-          <span class="bolt bolt--bl" aria-hidden="true"></span>
-          <span class="bolt bolt--br" aria-hidden="true"></span>
-
           <svg id="board" viewBox="0 0 100 60" preserveAspectRatio="xMidYMid meet">
             <defs>
               <pattern id="grid" width="6" height="6" patternUnits="userSpaceOnUse">
@@ -96,7 +90,6 @@ import "../styles/styles.css";
         </div>
 
         <p id="status" aria-live="polite"></p>
-        <p class="hint">Press and hold the start of the wire, then trace it all the way to the end.</p>
       </div>
     </main>
     <script src="../scripts/main.ts"></script>

@@ -1,4 +1,13 @@
-import { LEVELS, BEAD_RADIUS, isAtStart, nextState, type GameState, type Level, type Point } from "./path";
+import {
+  LEVELS,
+  BEAD_RADIUS,
+  isAtStart,
+  isWithinPath,
+  nextState,
+  type GameState,
+  type Level,
+  type Point,
+} from "./path";
 
 const svg = document.querySelector<SVGSVGElement>("#board")!;
 const track = document.querySelector<SVGPolylineElement>("#track")!;
@@ -118,7 +127,13 @@ function handleLoss(): void {
 svg.addEventListener("pointerdown", (event) => {
   if (state !== "idle") return;
   const point = toBoardPoint(event.clientX, event.clientY);
-  if (!isAtStart(point, currentLevel().path[0])) return;
+  const level = currentLevel();
+  if (!isAtStart(point, level.path[0])) return;
+  // The start capture radius is a generous click target, but on the
+  // narrower levels it reaches wider than the wire itself: a click inside
+  // the radius but off the wire must not start a run, or the very next
+  // move instantly fails the "still on the wire" check.
+  if (!isWithinPath(point, level.path, level.width)) return;
   svg.setPointerCapture(event.pointerId);
   dragging = true;
   state = "running";
